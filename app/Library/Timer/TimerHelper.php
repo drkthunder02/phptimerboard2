@@ -19,4 +19,19 @@ use Carbon\Carbon;
 
 class TimerHelper {
 
+    public function ConvertTimeToTimeString($time) {
+        $hours = ceil($time / 3600) % 24;
+        $minutes = ceil($time / 60) % 60;
+        $days = ceil($time / 86400);
+        
+        $timeString = $days . "D ". $hours . ":" . $minutes;
+        
+        return $timeString;
+    }
+
+    public function ConvertTimeFromInteger($time) {
+        $timeString = date("Y-m-d H:i:s", $time);
+        
+        return $timeString;
+    }
 }
