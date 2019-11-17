@@ -13,10 +13,23 @@ class CreateTimersTable extends Migration
      */
     public function up()
     {
-        Schema::create('timers', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('timers')) {
+            Schema::create('timers', function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->string('type');
+                $table->string('stage');
+                $table->string('region');
+                $table->string('sytem');
+                $table->string('planet');
+                $table->string('moon');
+                $table->string('owner');
+                $table->unsignedInteger('owner_id');
+                $table->dateTime('eveTime');
+                $table->text('notes');
+                $table->unsignedInteger('character_id');
+                $table->timestamps();
+            });
+        }
     }
 
     /**
