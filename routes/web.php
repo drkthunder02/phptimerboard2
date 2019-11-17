@@ -22,7 +22,6 @@ Route::group(['middleware' => ['auth']], function(){
     /**
      * Dashboard Controller Display pages
      */
-    Route::get('/dashboard', 'Dashboard\DashboardController@index')->name('/dashboard');
     //Route::get('/profile', 'Dashboard\DashboardController@profile');
 
     /**
@@ -30,7 +29,25 @@ Route::group(['middleware' => ['auth']], function(){
      */
     Route::get('/scopes/select', 'Auth\EsiScopeController@displayScopes');
     Route::post('redirectToProvider', 'Auth\EsiScopeController@redirectToProvider');
-    
+
+    /**
+     * Timer Controller display pages
+     */
+    Route::get('/dashboard', 'Timer\TimerController@dashboard')->name('/dashboard');
+    Route::get('/dashboard/past', 'Timer\TimerController@pastTimers')->name('/past');
+    Route::get('/timer/form', 'Timer\TimerController@displayTimerForm');
+    Route::post('/timer/store', 'Timer\TimerController@storeTimer');
+    Route::post('/timer/delete', 'Timer\TimerController@deleteTimer');
+
+    /**
+     * Admin Controller display pages
+     */
+    Route::get('/admin/display/users', 'Admin\AdminController@displayUsers');
+    Route::get('/admin/user/modify', 'Admin\AdminController@displayModifyUser');
+    Route::post('/admin/user/modify', 'Admin\AdminController@modifyUser');
+    Route::get('/admin/display/allowed', 'Admin\AdminController@displayAllowed');
+    Route::post('/admin/allowed/new', 'Admin\AdminController@addAllowed');
+    Route::post('/admin/allowed/delete', 'Admin\AdminController@deleteAllowed');
 });
 /*
 Route::group(['middleware' => ['guest']], function() {
