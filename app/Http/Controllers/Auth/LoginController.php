@@ -123,23 +123,23 @@ class LoginController extends Controller
             //If the owner has changed, then update their roles and permissions
             if($this->OwnerHasChanged($authUser->owner_hash, $eve_user->owner_hash)) {
                 //Get the right role for the user
-                $role = $this->GetRole(null, $eve_user->id);
+                $role = $this->GetRole($eve_user->id);
                 //Set the role for the user
-                $this->SetRole($role, $eve_user->id);
+                $this->UpdateRole($eve_user->id, $role);
                 //Update the user information never the less.
-                $this->UpdateUser($eve_user, $role);
+                $this->UpdateUser($eve_user);
                 //Update the user's roles and permission
-                $this->UpdatePermission($eve_user, $role);
+                $this->UpdatePermission($eve_user->id);
             }
             //Return the user to the calling auth function
             return $authUser;
         } else {
             //Get the role for the character to be stored in the database
-            $role = $this->GetRole(null, $eve_user->id);
+            $role = $this->GetRole($eve_user->id);
             //Create the user account
             $user = $this->CreateNewUser($eve_user);
             //Set the role for the user
-            $this->SetRole($role, $eve_user->id);
+            $this->SetRole($eve_uer->id, $role);
             //Create a user account
             return $user;
         }
@@ -179,24 +179,33 @@ class LoginController extends Controller
     }
 
     /**
-     * Update user permission
+     * Remove user permission(s)
      */
-    private function UpdatePermission($eve_user, $role) {
+    private function RemovePermission($charId) {
+        //Remove the user's permissions
         UserPermission::where(['character_id' => $eve_user->id])->delete();
-        $perm = new UserPermission();
-        $perm->character_id = $eve_user->id;
-        $perm->permission = $role;
-        $perm->save();
+    }
+
+    /**
+     * Update user role
+     */
+    private function UpdateRole($charId, $role) {
+        //Delete the user's current role
+        UserRole::where(['character_id'=> $charId])->delete();
+        //Add the user's new role
+        UserRole::insert([
+            'character_id'=> $charId,
+            'role'=> $role,
+        ]);
     }
 
     /**
      * Update the user
      */
-    private function UpdateUser($eve_user, $role) {
+    private function UpdateUser($eve_user) {
         User::where('character_id', $eve_user->id)->update([
             'avatar' => $eve_user->avatar,
             'owner_hash' => $eve_user->owner_hash,
-            'role' => $role,
         ]);
     }
 
@@ -223,7 +232,7 @@ class LoginController extends Controller
      * @param role
      * @param charId
      */
-    private function SetRole($role, $charId) {
+    private function SetRole($charId, $role) {
         $permission = new UserRole;
         $permission->character_id = $charId;
         $permission->role = $role;
@@ -268,13 +277,11 @@ class LoginController extends Controller
      * @param refreshToken
      * @param charId
      */
-    private function GetRole($refreshToken, $charId) {
-        //Set caching to null
-        $configuration = Configuration::getInstance();
-        $configuration->cache = NullCache::class;
+    private function GetRole($charId) {
 
         //Setup the user array
-        $haulers = AllowedLogin::where(['login_type' => 'Hauler'])->pluck('entity_id')->toArray();
+        $allowedUsers = AllowedLogin::where(['login_type' => 'User'])->pluck('entity_id')->toArray();
+        $allowedAdmins = array(env('FIRST_ADMIN_CHAR_ID'));
 
         // Instantiate a new ESI instance
         $esi = new Eseye();
@@ -285,7 +292,10 @@ class LoginController extends Controller
         ]);
 
         if(isset($character_info->corporation_id)) {
-            if(in_array($character_info->corporation_id, $haulers)) {
+            if(in_array($charId, $allowedAdmins)){
+                $role = 'Admin';
+            }
+            else if(in_array($character_info->corporation_id, $allowedUsers)) {
                 $role = 'User';
             } else {
                 $role = 'Guest';
