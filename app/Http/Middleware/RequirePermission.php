@@ -2,6 +2,15 @@
 
 namespace App\Http\Middleware;
 
+/**
+ * This middleware checks if a user has a certain permission set by te program.
+ * If the user has the correct permission it allows, them onto the page, and if the user doesn't then
+ * the middleware returns a 403 error.
+ * 
+ * Example:
+ * $this->middleware('permission:aPermission')
+ */
+
 //Internal Library
 use Closure;
 

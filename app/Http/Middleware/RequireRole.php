@@ -2,6 +2,15 @@
 
 namespace App\Http\Middleware;
 
+/**
+ * This middleware checks for if a role is required for a page.  If the user has the correct role
+ * then the middleware proceeds to the page, otherwise the middleware returns a 403 forbidden error
+ * to the user.
+ * 
+ * Example:
+ * $this->middleware('role:aRole')
+ */
+
 //Internal Libraries
 use Closure;
 

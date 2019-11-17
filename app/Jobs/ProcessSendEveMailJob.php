@@ -2,6 +2,10 @@
 
 namespace App\Jobs;
 
+/**
+ * This is just an example of how to create a job and send eve mails with said job.
+ */
+
 //Internal Library
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;

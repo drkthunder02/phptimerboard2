@@ -2,6 +2,10 @@
 
 namespace App\Library\Lookups;
 
+/**
+ * This library performs many different look up functions needed by various different programs.
+ */
+
 //Internal Libraries
 use DB;
 use Log;
