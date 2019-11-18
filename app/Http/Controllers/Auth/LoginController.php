@@ -54,6 +54,19 @@ class LoginController extends Controller
     }
 
     /**
+     * Landing page function
+     * 
+     * @return view
+     */
+    public function landingPage() {
+        if(Auth::check()) {
+            return redirect('/dashboard');
+        }
+
+        return view('landing.ladning');
+    }
+
+    /**
      * Logout function
      * 
      * @return void

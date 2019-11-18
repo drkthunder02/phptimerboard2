@@ -14,9 +14,7 @@
 /**
  * Unsecure Display pages
  */
-Route::get('/', 'Hauling\HaulingController@displayForm')->name('/');
-Route::post('/', 'Hauling\HaulingController@displayFormResults');
-Route::get('/display/quotes', 'Hauling\HaulingController@displayQuotes')->name('quotes');
+Route::get('/', 'Auth\LoginController@landingPage')->name('/');
 
 Route::group(['middleware' => ['auth']], function(){
     /**
