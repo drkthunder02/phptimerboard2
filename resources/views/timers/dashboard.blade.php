@@ -2,44 +2,65 @@
 @section('content')
 <br>
 <div class="container">
-    <div class="card">
-        <div class="card-header">
-            <h2>Total Contracts Available</h2>
-        </div>
-        <div class="card-body">
-            {{ $num }}
-        </div>
-    </div>
+    @if($ongoing > 0)
+        <table class="table table-striped table-bordered">
+            <thead>
+                <th>Type</th>
+                <th>Stage</th>
+                <th>Region</th>
+                <th>Location</th>
+                <th>Owner</th>
+                <th>Date & Time</th>
+                <th>Notes</th>
+            </thead>
+            <tbody>
+                @foreach($currentTimers as $timer)
+                <tr>
+                    <td>{{ $timer->type }}</td>
+                    <td>{{ $timer->stage }}</td>
+                    <td>{{ $timer->region }}</td>
+                    <td>{{ $timer->system . " - " . $timer->planet . " - " . $timer->moon }}</td>
+                    <td>{{ $timer->owner }}</td>
+                    <td>{{ $timer->eveTime }}</td>
+                    <td>{{ $timer->notes }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @else
+        No current timers        
+    @endif
 </div>
 <br>
-@if($num > 0)
 <div class="container">
-    <table class="table table-striped table-bordered">
-        <thead>
-            <th>Pickup System</th>
-            <th>Destination System</th>
-            <th>Type</th>
-            <th>Volume</th>
-            <th>Date Expired</th>
-            <th>Collateral</th>
-            <th>Reward</th>
-            <th>Availability</th>
-        </thead>
-        <tbody>
-            @foreach($contracts as $contract)
-            <tr>
-                <td>{{ $contract['pickup'] }}</td>
-                <td>{{ $contract['destination'] }}</td>
-                <td>{{ $contract['type'] }}</td>
-                <td>{{ number_format($contract['volume'], 2, ".", ",") }}</td>
-                <td>{{ $contract['expired'] }}</td>
-                <td>{{ number_format($contract['collateral'], 2, ".", ",") }}</td>
-                <td>{{ number_format($contract['reward'], 2, ".", ",") }}</td>
-                <td>{{ $contract['availability'] }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+    @if($past > 0)
+        <table class="table table-striped table-bordered">
+            <thead>
+                <th>Type</th>
+                <th>Stage</th>
+                <th>Region</th>
+                <th>Location</th>
+                <th>Owner</th>
+                <th>Date & Time</th>
+                <th>Notes</th>
+            </thead>
+            <tbody>
+                @foreach($oldTimers as $timer)
+                <tr>
+                    <td>{{ $timer->type }}</td>
+                    <td>{{ $timer->stage }}</td>
+                    <td>{{ $timer->region }}</td>
+                    <td>{{ $timer->system . " - " . $timer->planet . " - " . $timer->moon }}</td>
+                    <td>{{ $timer->owner }}</td>
+                    <td>{{ $timer->eveTime }}</td>
+                    <td>{{ $timer->notes }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @else
+        No past timers.
+    @endif
 </div>
-@endif
+
 @endsection
