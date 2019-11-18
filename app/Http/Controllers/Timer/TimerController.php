@@ -22,6 +22,7 @@ class TimerController extends Controller
      */
     public function dashboard() {
 
+        return view('timers.dashboard');
     }
 
     /**
